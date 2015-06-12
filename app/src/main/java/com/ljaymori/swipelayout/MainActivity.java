@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -26,24 +25,17 @@ public class MainActivity extends ActionBarActivity {
 
 
         mAdapter = new MyRecyclerViewAdapter(this, initData());
-        mAdapter.setOnListViewRevealListener(new MyRecyclerViewAdapter.OnListViewRevealListener() {
-            @Override
-            public void onReveal() {
-                Log.i("MainActivity", "scroll false");
-//                recyclerView.setScrollContainer(false);
-//                recyclerView.setClickable(false);
-//                recyclerView.setFocusable(false);
-            }
-        });
-        mAdapter.setOnListViewVanishListener(new MyRecyclerViewAdapter.OnListViewVanishListener() {
-            @Override
-            public void onVanish() {
-                Log.i("MainActivity", "scroll true");
-//                recyclerView.setScrollContainer(true);
-//                recyclerView.setClickable(true);
-//                recyclerView.setFocusable(true);
-            }
-        });
+//        mAdapter.setOnListViewRevealListener(new MyRecyclerViewAdapter.OnListViewRevealListener() {
+//            @Override
+//            public void onReveal() {
+//
+//            }
+//
+//            @Override
+//            public void onVanish() {
+//
+//            }
+//        });
 
         recyclerView.setAdapter(mAdapter);
     }
@@ -55,6 +47,7 @@ public class MainActivity extends ActionBarActivity {
         }
         return list;
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

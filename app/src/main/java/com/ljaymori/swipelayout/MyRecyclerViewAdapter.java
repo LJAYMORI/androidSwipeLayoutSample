@@ -6,9 +6,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daimajia.swipe.SwipeLayout;
 
@@ -55,41 +57,17 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
             listView = (ListView) swipeLayout.findViewById(R.id.listView);
             ArrayAdapter adapter = new ArrayAdapter(mContext, android.R.layout.simple_list_item_1, initContent());
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Toast.makeText(mContext, "position: " + position, Toast.LENGTH_SHORT).show();
+                }
+            });
             listView.setAdapter(adapter);
 
             swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
-//            View starBottView = sample1.findViewById(R.id.starbott);
             swipeLayout.addDrag(SwipeLayout.DragEdge.Right, swipeLayout.findViewById(R.id.bottom_wrapper));
-//            sample1.addDrag(SwipeLayout.DragEdge.Right, sample1.findViewById(R.id.bottom_wrapper_2));
-//            sample1.addDrag(SwipeLayout.DragEdge.Top, starBottView);
-//            sample1.addDrag(SwipeLayout.DragEdge.Bottom, starBottView);
-//            sample1.addRevealListener(R.id.delete, new SwipeLayout.OnRevealListener() {
-//                @Override
-//                public void onReveal(View child, SwipeLayout.DragEdge edge, float fraction, int distance) {
-//
-//                }
-//            });
-            swipeLayout.addRevealListener(R.id.bottom_wrapper, new SwipeLayout.OnRevealListener(){
-                @Override
-                public void onReveal(View view, SwipeLayout.DragEdge dragEdge, float v, int i) {
-                    Log.i("SwipeLayout", "Drag!!");
-//                    Log.i("SwipeLayout view", "type - " + view.ty);
-                    Log.i("SwipeLayout dragEdge", dragEdge.toString());
-                    Log.i("SwipeLayout float", v+"");
-                    Log.i("SwipeLayout i", i+"");
-
-                    if(v == 1.0) {
-                        if(revealListener != null) {
-                            revealListener.onReveal();
-                        }
-                    } else if (v == 0.0) {
-                        if(vanishListener != null) {
-                            vanishListener.onVanish();
-                        }
-                    }
-                }
-            });
-
+            swipeLayout.addSwipeListener(swipeListener);
 
             swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -104,39 +82,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
                     return true;
                 }
             });
-//            sample1.findViewById(R.id.star2).setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Toast.makeText(MyActivity.this, "Star", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//
-//            sample1.findViewById(R.id.trash2).setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Toast.makeText(MyActivity.this, "Trash Bin", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//
-//            sample1.findViewById(R.id.magnifier2).setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Toast.makeText(MyActivity.this, "Magnifier", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//
-//            sample1.addRevealListener(R.id.starbott, new SwipeLayout.OnRevealListener() {
-//                @Override
-//                public void onReveal(View child, SwipeLayout.DragEdge edge, float fraction, int distance) {
-//                    View star = child.findViewById(R.id.star);
-//                    float d = child.getHeight() / 2 - star.getHeight() / 2;
-//                    ViewHelper.setTranslationY(star, d * fraction);
-//                    ViewHelper.setScaleX(star, fraction + 0.6f);
-//                    ViewHelper.setScaleY(star, fraction + 0.6f);
-//                }
-//            });
-
-
 
         }
 
@@ -156,18 +101,43 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
     public interface OnListViewRevealListener {
         void onReveal();
+        void onVanish();
     }
     OnListViewRevealListener revealListener;
     public void setOnListViewRevealListener(OnListViewRevealListener listener) {
         revealListener = listener;
     }
 
-    public interface OnListViewVanishListener {
-        void onVanish();
-    }
-    OnListViewVanishListener vanishListener;
-    public void setOnListViewVanishListener(OnListViewVanishListener listener) {
-        vanishListener = listener;
-    }
+    private SwipeLayout.SwipeListener swipeListener =  new SwipeLayout.SwipeListener() {
 
+        @Override
+        public void onStartOpen(SwipeLayout swipeLayout) {
+
+        }
+
+        @Override
+        public void onOpen(SwipeLayout swipeLayout) {
+            // TODO up down scroll event ListView에게 주기
+        }
+
+        @Override
+        public void onStartClose(SwipeLayout swipeLayout) {
+
+        }
+
+        @Override
+        public void onClose(SwipeLayout swipeLayout) {
+            // TODO up down scroll event RecyclerView에게 주기
+        }
+
+        @Override
+        public void onUpdate(SwipeLayout swipeLayout, int i, int i1) {
+
+        }
+
+        @Override
+        public void onHandRelease(SwipeLayout swipeLayout, float v, float v1) {
+
+        }
+    };
 }
