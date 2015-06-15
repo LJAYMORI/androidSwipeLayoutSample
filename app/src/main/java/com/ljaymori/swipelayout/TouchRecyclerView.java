@@ -18,16 +18,23 @@ public class TouchRecyclerView extends RecyclerView {
         super(context, attrs, defStyle);
     }
 
-
-    private boolean isScrollable;
+    private boolean isScrollable = true;
     public void setScrollable(Boolean scrollable) {
         isScrollable = scrollable;
     }
+
     @Override
-    public boolean onInterceptTouchEvent(MotionEvent e) {
-        if(isScrollable) {
-            return super.onInterceptTouchEvent(e);
+    public boolean onTouchEvent(MotionEvent e) {
+        if(isScrollable){
+            return super.onTouchEvent(e);
+        } else {
+            if(e.getAction() == MotionEvent.ACTION_HOVER_MOVE) {
+                return false;
+            } else {
+                return super.onTouchEvent(e);
+            }
         }
-        return false;
+
+
     }
 }

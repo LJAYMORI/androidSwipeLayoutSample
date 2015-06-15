@@ -3,7 +3,6 @@ package com.ljaymori.swipelayout;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -12,7 +11,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity {
 
-    RecyclerView recyclerView;
+    TouchRecyclerView recyclerView;
     MyRecyclerViewAdapter mAdapter;
 
     @Override
@@ -20,22 +19,21 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView = (TouchRecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-
         mAdapter = new MyRecyclerViewAdapter(this, initData());
-//        mAdapter.setOnListViewRevealListener(new MyRecyclerViewAdapter.OnListViewRevealListener() {
-//            @Override
-//            public void onReveal() {
-//
-//            }
-//
-//            @Override
-//            public void onVanish() {
-//
-//            }
-//        });
+        mAdapter.setOnListViewRevealListener(new MyRecyclerViewAdapter.OnListViewRevealListener() {
+            @Override
+            public void onReveal() {
+//                recyclerView.setScrollable(false);
+            }
+
+            @Override
+            public void onVanish() {
+//                recyclerView.setScrollable(true);
+            }
+        });
 
         recyclerView.setAdapter(mAdapter);
     }

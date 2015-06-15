@@ -1,16 +1,14 @@
 package com.ljaymori.swipelayout;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.daimajia.swipe.SwipeLayout;
 
@@ -45,8 +43,9 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private ListView listView;
         private SwipeLayout swipeLayout;
+        private RecyclerView recyclerView;
+        private ItemRecyclerViewAdapter mAdapter;
         private TextView textView;
 
         public ViewHolder(View itemView) {
@@ -55,19 +54,24 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
             textView = (TextView) swipeLayout.findViewById(R.id.textView);
 
-            listView = (ListView) swipeLayout.findViewById(R.id.listView);
-            ArrayAdapter adapter = new ArrayAdapter(mContext, android.R.layout.simple_list_item_1, initContent());
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Toast.makeText(mContext, "position: " + position, Toast.LENGTH_SHORT).show();
-                }
-            });
-            listView.setAdapter(adapter);
+            recyclerView = (RecyclerView) swipeLayout.findViewById(R.id.recyclerView_in_item);
+            recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+
+            mAdapter = new ItemRecyclerViewAdapter(mContext, initContent());
+
+            recyclerView.setAdapter(mAdapter);
 
             swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
             swipeLayout.addDrag(SwipeLayout.DragEdge.Right, swipeLayout.findViewById(R.id.bottom_wrapper));
             swipeLayout.addSwipeListener(swipeListener);
+
+            swipeLayout.findViewById(R.id.recyclerView_in_item).setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    return false;
+                }
+            });
 
             swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -118,6 +122,9 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         @Override
         public void onOpen(SwipeLayout swipeLayout) {
             // TODO up down scroll event ListView에게 주기
+            if(revealListener != null) {
+                revealListener.onReveal();
+            }
         }
 
         @Override
@@ -128,6 +135,9 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         @Override
         public void onClose(SwipeLayout swipeLayout) {
             // TODO up down scroll event RecyclerView에게 주기
+            if(revealListener != null) {
+                revealListener.onVanish();
+            }
         }
 
         @Override
