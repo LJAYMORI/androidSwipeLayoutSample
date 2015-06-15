@@ -1,6 +1,6 @@
 # androidSwipeLayoutSample
 - SwipeLayoutSample
-- can scrolling in listview in swipelayout.
+- can scrolling RecyclerView in swipeLayout.
 
 
 # Reference
